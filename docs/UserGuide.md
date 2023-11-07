@@ -526,14 +526,14 @@ Output:
 
 **What it does**
 
-Marks the indicated employee as “Absent”, “Late”, or “Present”.
+Marks the indicated employee as “Absent”, “Late”, or “Present” only on the current day.
 
 **Command Format**
 
 `mark INDEX /at Attendance_Type` or `mark /n NAME /at Attendance_Type`
 
 * The attendance type can only be: `ABSENT`, `LATE`, or `PRESENT`.
-* It is not case-insensitive. e.g. you can either enter ABSENT or absent.
+* It is not case-sensitive. e.g. you can either enter ABSENT or absent.
 
 Examples:
 
@@ -561,8 +561,8 @@ View employee’s attendance report.
 
 Examples:
 
-* `attendance /n John` views John’s attendance report for the year up till today.
-* `attendance 1` views the first employee’s attendance report for the year up till today.
+* `attendance /n John` views *John’s* attendance report for the year up till today.
+* `attendance 1` views the *first employee’s* attendance report for the year up till today.
 
 Output:
 * If the index is not within the numbers in the list, the app should display `The employee index provided is invalid.`
@@ -677,7 +677,7 @@ If your changes to the data file makes its format invalid, ManaGease will discar
 | **[View Previous Month](#view-the-calendar-of-previous-month-pm)**     | `pm`                                                                                                                                                                                                                         |
 | **[View Current Month](#view-the-calendar-of-current-month-cm)**       | `cm`                                                                                                                                                                                                                         |
 | **[View Next Month](#view-the-calendar-of-upcoming-month-nm)**         | `nm`                                                                                                                                                                                                                         |
-| **[Mark](#marking-employees-attendance-mark)**                         | `mark INDEX /at ATTENDANCE_TYPE` or `mark /n NAME /at ATTENDANCE_TYPE`<br /> e.g, `mark 3 /at present`                                                                                                                       |
+| **[Mark](#marking-employees-attendance-mark)**                         | `mark INDEX /at ATTENDANCE_TYPE` or `mark /n NAME /at ATTENDANCE_TYPE`<br /> e.g, `mark 3 /at present`  or `mark /n John /at absent`                                                                                         |
 | **[Attendance](#view-employees-attendance-report-attendance)**         | `attendance INDEX` or `attendance /n NAME`<br /> e.g, `attendance 3`                                                                                                                                                         |
 | **[Help](#viewing-help-help)**                                         | `help`                                                                                                                                                                                                                       |
 | **[Exit](#exiting-the-program-exit)**                                  | `exit`                                                                                                                                                                                                                       |
