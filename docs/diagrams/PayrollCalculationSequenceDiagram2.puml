@@ -1,0 +1,34 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe ref
+box Calculate Payroll String PERSON_COLOR
+participant ":Payroll" as Payroll PERSON_COLOR
+participant ":Salary" as Salary PERSON_COLOR
+end box
+
+activate Payroll
+
+Payroll --> Salary: getNetSalaryString()
+activate Salary
+
+Salary --> Salary: getTotalDeductions()
+activate Salary
+
+deactivate Salary
+
+Salary --> Salary: getTotalBenefitss()
+activate Salary
+
+deactivate Salary
+
+Salary --> Salary: getNetSalary()
+activate Salary
+
+deactivate Salary
+
+Salary --> Payroll
+
+deactivate Salary
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Reason
+
+participant ":DeductCommandParser" as DeductCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+
+activate DeductCommandParser
+
+alt argMultimap.getValue(PREFIX_REASON).isPresent()
+    DeductCommandParser -> ArgMultimap : getValue(PREFIX_REASON).get()
+    activate ArgMultimap
+    ArgMultimap --> DeductCommandParser : "absence"
+    deactivate ArgMultimap
+    DeductCommandParser -> ParserUtil : parseDeductionReason("absence")
+    activate ParserUtil
+    ParserUtil --> DeductCommandParser : Reason.ABSENCE
+    deactivate ParserUtil
+else !argMultimap.getValue(PREFIX_REASON).isPresent()
+    DeductCommandParser -> ArgMultimap : getValue(PREFIX_REASON).isPresent()
+    activate ArgMultimap
+    ArgMultimap --> DeductCommandParser : ParseException
+    deactivate ArgMultimap
+end
+
+
+@enduml

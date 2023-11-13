@@ -1,0 +1,35 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Name
+
+participant ":PayrollCommandParser" as PayrollCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant "NameContainsKeywordsPredicate" as NameContainsKeywordsPredicate LOGIC_COLOR
+participant "pc:PayrollCommand" as PayrollCommand LOGIC_COLOR
+
+activate PayrollCommandParser
+
+
+PayrollCommandParser -> ArgMultimap : getValue(PREFIX_NAME).get()
+activate ArgMultimap
+ArgMultimap --> PayrollCommandParser : "Alex"
+deactivate ArgMultimap
+PayrollCommandParser -> ParserUtil : parseName("Alex").toString()
+activate ParserUtil
+ParserUtil --> PayrollCommandParser : name
+deactivate ParserUtil
+create NameContainsKeywordsPredicate
+PayrollCommandParser -> NameContainsKeywordsPredicate : new NameContainsKeywordsPredicate(Arrays.asList(name.split("\\s+")))
+activate NameContainsKeywordsPredicate
+NameContainsKeywordsPredicate --> PayrollCommandParser : predicate
+deactivate NameContainsKeywordsPredicate
+create PayrollCommand
+PayrollCommandParser -> PayrollCommand : new PayrollCommand(predicate)
+activate PayrollCommand
+PayrollCommand --> PayrollCommandParser : pc
+deactivate PayrollCommand
+
+@enduml

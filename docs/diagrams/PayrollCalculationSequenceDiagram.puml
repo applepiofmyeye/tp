@@ -1,0 +1,104 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+skinparam sequenceReferenceBackgroundColor white
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":PayrollCommandParser" as PayrollCommandParser LOGIC_COLOR
+participant "pc:PayrollCommand" as PayrollCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+box Person PERSON_COLOR
+participant ":Person" as Person PERSON_COLOR
+end box
+
+box PayrollStorage LOGIC_COLOR_T1
+participant ":PayrollStorage" as PayrollStorage LOGIC_COLOR_T1
+end box
+
+box Payroll PERSON_COLOR
+participant ":Payroll" as Payroll PERSON_COLOR
+end box
+
+[-> LogicManager : execute("payroll 1")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("payroll 1")
+activate AddressBookParser
+
+create PayrollCommandParser
+AddressBookParser -> PayrollCommandParser
+activate PayrollCommandParser
+
+PayrollCommandParser --> AddressBookParser
+deactivate PayrollCommandParser
+
+AddressBookParser -> PayrollCommandParser : parse("1")
+activate PayrollCommandParser
+
+create PayrollCommand
+PayrollCommandParser -> PayrollCommand
+activate PayrollCommand
+
+PayrollCommand --> PayrollCommandParser : pc
+deactivate PayrollCommand
+
+PayrollCommandParser --> AddressBookParser : pc
+deactivate PayrollCommandParser
+
+PayrollCommandParser -[hidden]-> AddressBookParser
+destroy PayrollCommandParser
+
+AddressBookParser --> LogicManager : pc
+deactivate AddressBookParser
+
+LogicManager -> PayrollCommand : execute()
+activate PayrollCommand
+
+PayrollCommand -> Model : getFilteredPersonList()
+activate Model
+
+Model --> PayrollCommand:
+deactivate Model
+
+PayrollCommand -> Person : getLatestPayroll()
+activate Person
+
+Person -> PayrollStorage : getLatestPayroll()
+activate PayrollStorage
+
+PayrollStorage -> Person
+deactivate PayrollStorage
+
+Person --> PayrollCommand :
+deactivate Person
+
+PayrollCommand --> Payroll : calculatePayrollString()
+activate Payroll
+
+ref over Payroll: calculatePayrollString()
+
+Payroll --> PayrollCommand
+deactivate Payroll
+
+create CommandResult
+PayrollCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> PayrollCommand : result
+deactivate CommandResult
+
+PayrollCommand --> LogicManager : result
+deactivate PayrollCommand
+
+[<--LogicManager
+deactivate LogicManager
+
+@enduml

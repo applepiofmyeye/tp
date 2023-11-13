@@ -1,0 +1,40 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Index
+
+participant ":DeductCommandParser" as DeductCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant "dc:DeductCommand" as DeductCommand LOGIC_COLOR
+
+activate DeductCommandParser
+
+alt argMultimap.getPreamble().isNonZeroUnsignedInteger()
+    DeductCommandParser -> ArgMultimap : getPreamble()
+    activate ArgMultimap
+    ArgMultimap --> DeductCommandParser : "1"
+    deactivate ArgMultimap
+    DeductCommandParser -> ParserUtil : parseIndex("1")
+    activate ParserUtil
+    ParserUtil --> DeductCommandParser : index
+    deactivate ParserUtil
+    create DeductCommand
+    DeductCommandParser -> DeductCommand : new DeductCommand(index, deduction)
+    activate DeductCommand
+    DeductCommand --> DeductCommandParser : dc
+    deactivate DeductCommand
+else else
+    alt argMultimap.getValue(PREFIX_NAME).isEmpty()
+    <-- DeductCommandParser : ParseException
+    note over DeductCommandParser: Both index and name are empty
+    else else
+    group **sd** Parse_Name
+    end
+    note over DeductCommandParser: Index is empty while name is present
+    end
+end
+
+
+@enduml

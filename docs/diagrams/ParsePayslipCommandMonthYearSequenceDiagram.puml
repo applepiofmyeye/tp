@@ -1,0 +1,30 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_MonthYear
+
+participant ":PayslipCommandParser" as PayslipCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+
+activate PayslipCommandParser
+
+alt argMultimap.getValue(PREFIX_MONTH_YEAR).isPresent()
+    PayslipCommandParser -> ArgMultimap : getValue(PREFIX_MONTH_YEAR).get()
+    activate ArgMultimap
+    ArgMultimap --> PayslipCommandParser : "09/10/2023"
+    deactivate ArgMultimap
+    PayslipCommandParser -> ParserUtil : stringToDate("09/10/2023")
+    activate ParserUtil
+    ParserUtil --> PayslipCommandParser : monthYear
+    deactivate ParserUtil
+else !argMultimap.getValue(PREFIX_MONTH_YEAR).isPresent()
+    PayslipCommandParser -> ArgMultimap : getValue(PREFIX_MONTH_YEAR).isPresent()
+    activate ArgMultimap
+    ArgMultimap --> PayslipCommandParser : ParseException
+    deactivate ArgMultimap
+end
+
+
+@enduml

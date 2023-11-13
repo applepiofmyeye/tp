@@ -1,0 +1,60 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe ref
+
+box Commons ATTENDANCE_COLOR_T1
+participant "<<class>>\nPayslipGenerator" as PayslipGenerator ATTENDANCE_COLOR
+end box
+
+box Person PERSON_COLOR
+participant ":Person" as Person PERSON_COLOR
+participant ":PayrollStorage" as PayrollStorage PERSON_COLOR
+participant ":Payroll" as Payroll PERSON_COLOR
+end box
+
+activate PayslipGenerator
+PayslipGenerator -> PayslipGenerator : getFieldMap()
+activate PayslipGenerator
+
+PayslipGenerator -> Person : getPayrollWithStartDate()
+activate Person
+create PayrollStorage
+Person -> PayrollStorage
+activate PayrollStorage
+
+Person -> PayrollStorage : getPayrollWithStartDate()
+create Payroll
+PayrollStorage -> Payroll :
+activate Payroll
+Payroll --> PayrollStorage
+deactivate Payroll
+PayrollStorage --> Person
+deactivate PayrollStorage
+Person --> PayslipGenerator
+deactivate Person
+
+
+PayslipGenerator -> Payroll : getBasicSalaryString()
+activate Payroll
+PayslipGenerator -> Payroll : getTotalDeductionsString()
+PayslipGenerator -> Payroll : getNetSalaryString()
+PayslipGenerator -> Payroll : getTotalAllowancesExceptBonusesString()
+PayslipGenerator -> Payroll : getGrossPayString()
+PayslipGenerator -> Payroll : getEmployeeCpfDeductionsString()
+PayslipGenerator -> Payroll : getAnnualBonusesString()
+PayslipGenerator -> Payroll : getAbsencesString()
+PayslipGenerator -> Payroll : getNoPayLeavesString()
+PayslipGenerator -> Payroll : getTransportAllowancesString()
+PayslipGenerator -> Payroll : getStartDateString()
+PayslipGenerator -> Payroll : getEndDateString()
+PayslipGenerator -> Payroll : getPaymentDateString()
+Payroll --> PayslipGenerator
+
+deactivate Payroll
+
+PayslipGenerator --> PayslipGenerator
+deactivate PayslipGenerator
+
+@enduml

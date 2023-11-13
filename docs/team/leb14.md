@@ -25,17 +25,19 @@ Given below are my contributions to the project.
 * **Code contributed**: [RepoSense link](https://nus-cs2103-ay2324s1.github.io/tp-dashboard/?search=Leb14&breakdown=false&sort=groupTitle%20dsc&sortWithin=title&since=2023-09-22&timeframe=commit&mergegroup=&groupSelect=groupByRepos)
 
 * **Project management**:
-  * 
+  * Creates some issues and assigned them to the respective team member
 
 * **Documentation**:
   * User Guide:
-    * Added documentation for the features `read`, `nm`, `pm`, `cm`, and `view leave`.
+    * Added documentation for the `read`, `nm`, `pm`, `cm`, and `view leave` features.
+    * Added the `glossary` section
   * Developer Guide:
-    * Added implementation details of the `read` feature.
+    * Added implementation details of the `read`, `viewleave` feature.
+    * Update new UI class diagram and description
+    * Added use case for `viewleave` feature
       
 * **Community**:
-  * Review teammate's PR and merge\
- 
+  * PRs reviewed (with non-trivial review comments): #47
   * Reported bugs and suggestions for other teams in the class
     
 * **Tools**:

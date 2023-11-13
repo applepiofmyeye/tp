@@ -117,6 +117,20 @@ public class DeleteCommandTest {
     }
 
     @Test
+    public void execute_invalidNameFilteredList_throwsCommandException() {
+        String name = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased()).getName().toString();
+        String[] words = name.split("\\s+");
+        String firstName = words[0];
+        StringBuilder str = new StringBuilder(firstName);
+        str.reverse();
+
+        DeleteCommand deleteCommand =
+                new DeleteCommand(new NameContainsKeywordsPredicate(Arrays.asList(str.toString())));
+
+        assertCommandFailure(deleteCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_NAME);
+    }
+
+    @Test
     public void equalsForIndex() {
         DeleteCommand deleteFirstCommand = new DeleteCommand(INDEX_FIRST_PERSON);
         DeleteCommand deleteSecondCommand = new DeleteCommand(INDEX_SECOND_PERSON);
@@ -185,7 +199,10 @@ public class DeleteCommandTest {
         assertFalse(deleteFirstCommand.equals(deleteSecondIndexCommand));
         assertFalse(deleteSecondCommand.equals(deleteFirstIndexCommand));
         assertFalse(deleteSecondCommand.equals(deleteSecondIndexCommand));
-
+        assertFalse(deleteFirstIndexCommand.equals(deleteFirstCommand));
+        assertFalse(deleteFirstIndexCommand.equals(deleteSecondCommand));
+        assertFalse(deleteSecondIndexCommand.equals(deleteFirstCommand));
+        assertFalse(deleteSecondIndexCommand.equals(deleteSecondCommand));
     }
 
     @Test

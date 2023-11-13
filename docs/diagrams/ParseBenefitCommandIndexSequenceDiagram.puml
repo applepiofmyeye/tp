@@ -1,0 +1,40 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Index
+
+participant ":BenefitCommandParser" as BenefitCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant "bc:BenefitCommand" as BenefitCommand LOGIC_COLOR
+
+activate BenefitCommandParser
+
+alt argMultimap.getPreamble().isNonZeroUnsignedInteger()
+    BenefitCommandParser -> ArgMultimap : getPreamble()
+    activate ArgMultimap
+    ArgMultimap --> BenefitCommandParser : "1"
+    deactivate ArgMultimap
+    BenefitCommandParser -> ParserUtil : parseIndex("1")
+    activate ParserUtil
+    ParserUtil --> BenefitCommandParser : index
+    deactivate ParserUtil
+    create BenefitCommand
+    BenefitCommandParser -> BenefitCommand : new BenefitCommand(index, benefit)
+    activate BenefitCommand
+    BenefitCommand --> BenefitCommandParser : bc
+    deactivate BenefitCommand
+else else
+    alt argMultimap.getValue(PREFIX_NAME).isEmpty()
+    <-- BenefitCommandParser : ParseException
+    note over BenefitCommandParser: Both index and name are empty
+    else else
+    group **sd** Parse_Name
+    end
+    note over BenefitCommandParser: Index is empty while name is present
+    end
+end
+
+
+@enduml

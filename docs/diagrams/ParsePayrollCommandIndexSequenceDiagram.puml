@@ -1,0 +1,25 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Index
+
+participant ":PayrollCommandParser" as PayrollCommandParser LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant "pc:PayrollCommand" as PayrollCommand LOGIC_COLOR
+
+activate PayrollCommandParser
+
+PayrollCommandParser -> ParserUtil : parseIndex("1")
+activate ParserUtil
+
+ParserUtil --> PayrollCommandParser : index
+deactivate ParserUtil
+create PayrollCommand
+PayrollCommandParser -> PayrollCommand : new PayrollCommand(index)
+activate PayrollCommand
+
+PayrollCommand --> PayrollCommandParser : pc
+deactivate PayrollCommand
+
+@enduml

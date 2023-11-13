@@ -1,0 +1,36 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Value
+
+participant ":DeductCommandParser" as DeductCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant ":Deduction" as Deduction LOGIC_COLOR
+
+activate DeductCommandParser
+
+alt argMultimap.getValue(PREFIX_VALUE).isPresent()
+    DeductCommandParser -> ArgMultimap : getValue(PREFIX_VALUE).get()
+    activate ArgMultimap
+    ArgMultimap --> DeductCommandParser : "150.00"
+    deactivate ArgMultimap
+    DeductCommandParser -> ParserUtil : parseDeduction("150.00", Reason.ABSENCE)
+    activate ParserUtil
+    create Deduction
+    ParserUtil -> Deduction : new Deduction("150.00", Reason.ABSENCE)
+    activate Deduction
+    Deduction --> ParserUtil : deduction
+    deactivate Deduction
+    ParserUtil --> DeductCommandParser : deduction
+    deactivate ParserUtil
+else !argMultimap.getValue(PREFIX_VALUE).isPresent()
+    DeductCommandParser -> ArgMultimap : getValue(PREFIX_VALUE).isPresent()
+    activate ArgMultimap
+    ArgMultimap --> DeductCommandParser : ParseException
+    deactivate ArgMultimap
+end
+
+
+@enduml

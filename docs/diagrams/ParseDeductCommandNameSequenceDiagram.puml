@@ -1,0 +1,38 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Name
+
+participant ":DeductCommandParser" as DeductCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant "NameContainsKeywordsPredicate" as NameContainsKeywordsPredicate LOGIC_COLOR
+participant "dc:DeductCommand" as DeductCommand LOGIC_COLOR
+
+activate DeductCommandParser
+
+
+DeductCommandParser -> ArgMultimap : getValue(PREFIX_NAME).get()
+activate ArgMultimap
+ArgMultimap --> DeductCommandParser : "Alex"
+deactivate ArgMultimap
+DeductCommandParser -> ParserUtil : parseName("Alex").toString()
+activate ParserUtil
+ParserUtil --> DeductCommandParser : name
+deactivate ParserUtil
+create NameContainsKeywordsPredicate
+DeductCommandParser -> NameContainsKeywordsPredicate : new NameContainsKeywordsPredicate(Arrays.asList(name.split("\\s+")))
+activate NameContainsKeywordsPredicate
+NameContainsKeywordsPredicate --> DeductCommandParser : predicate
+deactivate NameContainsKeywordsPredicate
+create DeductCommand
+DeductCommandParser -> DeductCommand : new DeductCommand(predicate, deduction)
+activate DeductCommand
+DeductCommand --> DeductCommandParser : dc
+deactivate DeductCommand
+
+
+
+
+@enduml

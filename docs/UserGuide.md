@@ -56,7 +56,7 @@ We hope you enjoy using ManaGease as much as we enjoyed building it.
     * [Saving the data](#saving-the-data)
     * [Editing the data file](#editing-the-data-file)
   * [FAQ](#faq)
-  * * [Glossary](#glossary)
+  * [Glossary](#glossary)
   * [Command summary](#command-summary)
 <!-- TOC -->
 
@@ -282,9 +282,14 @@ Please do not use negative integers, non-integers and extremely large integers(i
 
 * The `NAME` must be in the correct [format](#parameter-formats).
 
+<div markdown="span" class="alert alert-primary">:bulb: **Note:**
+To allow greater flexibility in terms of searching, if there are 2 or more employees with same name, i.e. Amy Tan and Amy Teo, entering the command <code>delete /n FULLNAME</code> of any of the employee will still return a list of these employees instead of deleting the employee that matches the full name. 
+</div>
+
 **Examples:**
 * `list` followed by `delete 2` deletes the 2nd employee in the employee directory.
 * `find Betsy` followed by `delete 1` deletes the 1st employee in the results of the `find` command.
+* `delete /n Betsy` will delete the employee with the name 'Betsy' if there is only one such employee with this name. If there is no such employee, there will be an error message displayed. Otherwise, it will return you a list of employees with the name 'Betsy' and you will have to follow up with a `delete INDEX` command to delete the 'Betsy' that you want using the index displayed in the list.
 
 **Output:**
 * If the index is valid or there is only one employee in the list, whose name contains the keyword, ManaGease should display a confirmation message indicating that the employee information has been successfully deleted.
@@ -315,11 +320,14 @@ This feature allows users to view specific information **<ins>(except the name)<
 * The `INDEX` **must be a positive integer**, and **must be within the range of the list (Total number of employees in the current list displayed)**.
 <div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
 Please do not use negative integers, non-integers and extremely large integers(integers greater than 2147483647) for the <code>INDEX</code>.
-</div>
-
+</div><br>
 
 **Examples:**
 * `read 1 /a` reads the address of the first employee in the most recently displayed list.
+
+<div markdown="span" class="alert alert-primary">:bulb: **Notes:**
+Read command is extremely useful for leave tracking as the employee card only displays the promised annual leave of the employee. Use `read x /l` (where x is the index of the employee for whom you intend to check) to check the leave balance/leave taken to avoid errors before adding or deleting leaves.
+</div> <br>
 
 **Output:**
 
@@ -368,6 +376,10 @@ Please do not use negative integers, non-integers and extremely large integers(i
 
 * The `DATE` must be in `DD/MM/YYYY` format, e.g. `01/01/2024`.
 * For adding in multiple days of leave, the second `DATE` must be after the first `DATE`.
+
+<div markdown="span" class="alert alert-primary">:bulb: **Tips!** <br>
+Before adding leave, you can utilize the command `read x /l` (where x is the index of the employee for whom you intend to add leave) to check the leave balance. This ensures you avoid errors due to insufficient leave balance for the specified employee.
+</div> <br>
 
 **Examples:**
 * `addleave 3 /on 01/01/2024` adds a single day of leave of `01/01/2024` to the third employee in the most recently displayed list.
@@ -418,6 +430,10 @@ Please do not use negative integers, non-integers and extremely large integers(i
 
 * The `DATE` must be in `DD/MM/YYYY` format, e.g. `01/01/2024`.
 * For deleting multiple days of leave, the second `DATE` must be after the first `DATE`.
+
+<div markdown="span" class="alert alert-primary">:bulb: **Tips!** <br>
+Before deleting leave, you can utilize the command `read x /l` (where x is the index of the employee for whom you intend to delete leave) to verify that the leave taken matches the leave you wish to delete. This ensures you avoid errors due to insufficient leave balance for the specified employee.
+</div> <br>
 
 **Examples:**
 * `deleteleave 3 /on 01/01/2024` deletes a single day of leave of `01/01/2024` from the third employee in the most recently displayed list.
@@ -894,7 +910,7 @@ If your changes to the data file makes its format invalid, ManaGease will not ru
 **Q**: How do I transfer my data to another Computer?<br>
 **A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous ManaGease home folder.
 
-**Q**: I am using multiple screens. If I move the application to a secondary screen, and later switch to using only the primary screen, the GUI will open off-screen.<br>
+**Q**: I am using multiple screens. If I move the application to a secondary screen, and later switch to using only the primary screen, the GUI will open off-screen. What should I do?<br>
 **A**: Delete the `preferences.json` file created by the application before running the application again.
 
 **Q**: Is internet access necessary for the application? <br>

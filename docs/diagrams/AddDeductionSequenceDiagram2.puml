@@ -1,0 +1,45 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe ref
+box Person PERSON_COLOR
+participant ":Person" as Person PERSON_COLOR
+participant ":PayrollStorage" as PayrollStorage PERSON_COLOR
+participant ":Payroll" as Payroll PERSON_COLOR
+participant ":Salary" as Salary PERSON_COLOR
+participant ":Deduction" as Deduction PERSON_COLOR
+end box
+
+activate Person
+
+
+create PayrollStorage
+Person -> PayrollStorage
+activate PayrollStorage
+
+Person -> PayrollStorage : getLatestPayroll()
+create Payroll
+PayrollStorage -> Payroll :
+activate Payroll
+
+PayrollStorage -> Payroll : addDeduction()
+create Salary
+Payroll -> Salary :
+activate Salary
+Payroll -> Salary : addDeduction()
+create Deduction
+Salary -> Deduction : new
+activate Deduction
+Deduction --> Salary
+deactivate Deduction
+Salary --> Payroll :
+deactivate Salary
+Payroll --> PayrollStorage :
+deactivate Payroll
+PayrollStorage --> Person :
+deactivate PayrollStorage
+
+deactivate Person
+
+@enduml

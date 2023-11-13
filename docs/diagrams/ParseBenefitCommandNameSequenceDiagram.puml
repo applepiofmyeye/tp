@@ -1,0 +1,38 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Name
+
+participant ":BenefitCommandParser" as BenefitCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant "NameContainsKeywordsPredicate" as NameContainsKeywordsPredicate LOGIC_COLOR
+participant "bc:BenefitCommand" as BenefitCommand LOGIC_COLOR
+
+activate BenefitCommandParser
+
+
+BenefitCommandParser -> ArgMultimap : getValue(PREFIX_NAME).get()
+activate ArgMultimap
+ArgMultimap --> BenefitCommandParser : "Alex"
+deactivate ArgMultimap
+BenefitCommandParser -> ParserUtil : parseName("Alex").toString()
+activate ParserUtil
+ParserUtil --> BenefitCommandParser : name
+deactivate ParserUtil
+create NameContainsKeywordsPredicate
+BenefitCommandParser -> NameContainsKeywordsPredicate : new NameContainsKeywordsPredicate(Arrays.asList(name.split("\\s+")))
+activate NameContainsKeywordsPredicate
+NameContainsKeywordsPredicate --> BenefitCommandParser : predicate
+deactivate NameContainsKeywordsPredicate
+create BenefitCommand
+BenefitCommandParser -> BenefitCommand : new BenefitCommand(predicate, benefit)
+activate BenefitCommand
+BenefitCommand --> BenefitCommandParser : bc
+deactivate BenefitCommand
+
+
+
+
+@enduml

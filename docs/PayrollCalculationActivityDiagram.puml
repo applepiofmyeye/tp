@@ -1,0 +1,28 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+
+start
+
+:User finds the index or name of employee of interest;
+:User enters payroll command;
+:ManaGease reads and parses command;
+
+    if () then ([User specifies the index of employee])
+        :ManaGease displays the payroll
+        details for the specified employee;
+    else ([User specifies the name of employee])
+        repeat
+        :ManaGease shows all employees
+        whose name contains the name keyword;
+        backward:User selects the employee of interest;
+        repeat while () is ([More than one
+        matching employees])
+            :ManaGease displays the payroll
+            details for the specified employee;
+    endif
+
+stop
+
+@enduml

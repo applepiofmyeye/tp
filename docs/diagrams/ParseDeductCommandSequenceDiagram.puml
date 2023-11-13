@@ -1,0 +1,44 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+skinparam sequenceReferenceBackgroundColor white
+
+
+participant ":DeductCommandParser" as DeductCommandParser LOGIC_COLOR
+participant "<<class>>\nArgumentTokenizer" as ArgumentTokenizer LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+
+
+-> DeductCommandParser : parse("1 /v 150.00 /r absence") \n or \n parse("/n Alex /v 150.00 /r absence")
+activate DeductCommandParser
+
+DeductCommandParser -> ArgumentTokenizer : tokenize("1 /v 150.00 /r absence",\nPREFIX_NAME, \nPREFIX_VALUE, \nPREFIX_REASON) \n or \n tokenize("/n Alex /v 150.00 /r absence",\nPREFIX_NAME, \nPREFIX_VALUE, \nPREFIX_REASON)
+activate ArgumentTokenizer
+
+create ArgMultimap
+ArgumentTokenizer -> ArgMultimap : new
+activate ArgMultimap
+ArgumentTokenizer <-- ArgMultimap
+deactivate ArgMultimap
+DeductCommandParser <-- ArgumentTokenizer
+deactivate ArgumentTokenizer
+
+group **sd** Parse_Reason
+end
+
+group **sd** Parse_Value
+end
+
+group **sd** Parse_Index
+end
+
+group **sd** Parse_Name
+end
+
+<-- DeductCommandParser : dc
+deactivate DeductCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+DeductCommandParser -[hidden]->
+destroy DeductCommandParser
+
+@enduml

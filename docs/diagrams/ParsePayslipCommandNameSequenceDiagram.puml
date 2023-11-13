@@ -1,0 +1,49 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Name
+
+participant ":PayslipCommandParser" as PayslipCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant "NameContainsKeywordsPredicate" as NameContainsKeywordsPredicate LOGIC_COLOR
+participant "pc:PayslipCommand" as PayslipCommand LOGIC_COLOR
+
+activate PayslipCommandParser
+
+
+PayslipCommandParser -> ArgMultimap : getValue(PREFIX_NAME).get()
+activate ArgMultimap
+ArgMultimap --> PayslipCommandParser : "Alex"
+deactivate ArgMultimap
+PayslipCommandParser -> ParserUtil : parseName("Alex").toString()
+activate ParserUtil
+ParserUtil --> PayslipCommandParser : name
+deactivate ParserUtil
+create NameContainsKeywordsPredicate
+PayslipCommandParser -> NameContainsKeywordsPredicate : new NameContainsKeywordsPredicate(Arrays.asList(name.split("\\s+")))
+activate NameContainsKeywordsPredicate
+NameContainsKeywordsPredicate --> PayslipCommandParser : predicate
+deactivate NameContainsKeywordsPredicate
+
+alt argMultimap.getValue(PREFIX_MONTH_YEAR).isEmpty()
+    create PayslipCommand
+    PayslipCommandParser -> PayslipCommand : new PayslipCommand(predicate)
+    activate PayslipCommand
+    PayslipCommand --> PayslipCommandParser : pc
+    deactivate PayslipCommand
+else else
+    create PayslipCommand
+    PayslipCommandParser -> PayslipCommand : new PayslipCommand(predicate, monthYear.withDayOfMonth(1))
+    activate PayslipCommand
+    PayslipCommand --> PayslipCommandParser : pc
+    deactivate PayslipCommand
+end
+
+
+
+
+
+
+@enduml

@@ -1,0 +1,36 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Value
+
+participant ":BenefitCommandParser" as BenefitCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant ":Benefit" as Benefit LOGIC_COLOR
+
+activate BenefitCommandParser
+
+alt argMultimap.getValue(PREFIX_VALUE).isPresent()
+    BenefitCommandParser -> ArgMultimap : getValue(PREFIX_VALUE).get()
+    activate ArgMultimap
+    ArgMultimap --> BenefitCommandParser : "150.00"
+    deactivate ArgMultimap
+    BenefitCommandParser -> ParserUtil : parseBenefit("150.00", Reason.ANNUAL_BONUS)
+    activate ParserUtil
+    create Benefit
+    ParserUtil -> Benefit : new Benefit("150.00", Reason.ANNUAL_BONUS)
+    activate Benefit
+    Benefit --> ParserUtil : benefit
+    deactivate Benefit
+    ParserUtil --> BenefitCommandParser : benefit
+    deactivate ParserUtil
+else !argMultimap.getValue(PREFIX_VALUE).isPresent()
+    BenefitCommandParser -> ArgMultimap : getValue(PREFIX_VALUE).isPresent()
+    activate ArgMultimap
+    ArgMultimap --> BenefitCommandParser : ParseException
+    deactivate ArgMultimap
+end
+
+
+@enduml

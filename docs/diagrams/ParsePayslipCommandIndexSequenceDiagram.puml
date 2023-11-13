@@ -1,0 +1,50 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+mainframe **sd** Parse_Index
+
+participant ":PayslipCommandParser" as PayslipCommandParser LOGIC_COLOR
+participant "argMultimap:ArgumentMultimap" as ArgMultimap LOGIC_COLOR
+participant "<<class>>\nParserUtil" as ParserUtil LOGIC_COLOR
+participant "pc:PayslipCommand" as PayslipCommand LOGIC_COLOR
+
+activate PayslipCommandParser
+
+alt argMultimap.getPreamble().isNonZeroUnsignedInteger()
+    PayslipCommandParser -> ArgMultimap : getPreamble()
+    activate ArgMultimap
+    ArgMultimap --> PayslipCommandParser : "1"
+    deactivate ArgMultimap
+    PayslipCommandParser -> ParserUtil : parseIndex("1")
+    activate ParserUtil
+    ParserUtil --> PayslipCommandParser : index
+    deactivate ParserUtil
+
+    alt argMultimap.getValue(PREFIX_MONTH_YEAR).isEmpty()
+        create PayslipCommand
+        PayslipCommandParser -> PayslipCommand : new PayslipCommand(index)
+        activate PayslipCommand
+        PayslipCommand --> PayslipCommandParser : pc
+        deactivate PayslipCommand
+    else else
+        create PayslipCommand
+        PayslipCommandParser -> PayslipCommand : new PayslipCommand(index, monthYear.withDayOfMonth(1))
+        activate PayslipCommand
+        PayslipCommand --> PayslipCommandParser : pc
+        deactivate PayslipCommand
+    end
+
+else else
+    alt argMultimap.getValue(PREFIX_NAME).isEmpty()
+    <-- PayslipCommandParser : ParseException
+    note over PayslipCommandParser: Both index and name are empty
+    else else
+    group **sd** Parse_Name
+    end
+    note over PayslipCommandParser: Index is empty while name is present
+    end
+end
+
+
+@enduml

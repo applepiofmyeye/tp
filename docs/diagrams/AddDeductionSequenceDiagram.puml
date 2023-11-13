@@ -1,6 +1,7 @@
 @startuml
 !include style.puml
 skinparam ArrowFontStyle plain
+skinparam sequenceReferenceBackgroundColor white
 
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
@@ -16,9 +17,6 @@ end box
 
 box Person PERSON_COLOR
 participant ":Person" as Person PERSON_COLOR
-participant ":PayrollStorage" as PayrollStorage PERSON_COLOR
-participant ":Payroll" as Payroll PERSON_COLOR
-participant ":Salary" as Salary PERSON_COLOR
 end box
 
 [-> LogicManager : execute("deduct 1 /v 150.00 /r absence")
@@ -64,26 +62,8 @@ deactivate Model
 
 DeductCommand -> Person : getPayrollStorage()
 activate Person
-create PayrollStorage
-Person -> PayrollStorage
-activate PayrollStorage
 
-Person -> PayrollStorage : getLatestPayroll()
-create Payroll
-PayrollStorage -> Payroll :
-activate Payroll
-
-PayrollStorage -> Payroll : addDeduction()
-create Salary
-Payroll -> Salary :
-activate Salary
-Payroll -> Salary : addDeduction()
-Salary --> Payroll :
-deactivate Salary
-Payroll --> PayrollStorage :
-deactivate Payroll
-PayrollStorage --> Person :
-deactivate PayrollStorage
+ref over Person : **addDeduction()**
 
 Person --> DeductCommand :
 deactivate Person
