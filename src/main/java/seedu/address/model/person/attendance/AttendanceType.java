@@ -9,7 +9,7 @@ public enum AttendanceType {
     PRESENT,
     ON_LEAVE;
     public static final String MESSAGE_CONSTRAINTS =
-            "Attendance type should only contain alphabets. It should either be 'present', 'late' or 'absent'.";
+            "Attendance type should only either be 'present', 'late' or 'absent'.";
 
     /**
      * Validate the attendance type entered by the user.

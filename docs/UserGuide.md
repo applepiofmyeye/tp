@@ -795,8 +795,9 @@ Please do not use negative integers, non-integers and extremely large integers(i
 **Possible Error Output:**
 
 * If the index is not within the numbers in the list, the app should display `The employee index provided is invalid.`
-* If the command is incorrect, the app should display `Invalid command format!`
+* If the command is incorrect, the app should display the following message.
   <br>![result for incorrect command](images/incorrectAttendanceCommand.png)
+
 
 * Go back to [Table of Contents](#table-of-contents)
 
